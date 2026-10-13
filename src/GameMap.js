@@ -4,10 +4,12 @@ export class GameMap{
                      [1, 0, 0, 0, 0, 0, 1],
                      [1, 0, 0, 0, 0, 0, 1],
                      [1, 0, 0, 0, 0, 0, 1],
+                     [1, 0, 0, 0, 0, 0, 1],
+                     [1, 0, 0, 0, 0, 0, 1],
                      [1, 1, 1, 1, 1, 1, 1]]
 
         this.mapHeight = this.grid.length;
-        this.mapHeight = this.grid[0].length;
+        this.mapWidth = this.grid[0].length;
     }
 
     isWall(x, y){
