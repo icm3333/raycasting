@@ -61,10 +61,10 @@ function frame(now){
     dt = Math.min(dt, 0.1);
     previousNow = now;
 
-    if (input.isDown("KeyW")) player.moveForward(movespeed*dt);
-    if (input.isDown("KeyS")) player.moveForward(-movespeed*dt);
-    if (input.isDown("KeyD")) player.strafe(movespeed * dt);
-    if (input.isDown("KeyA")) player.strafe(-movespeed * dt);
+    if (input.isDown("KeyW")) player.moveForward(movespeed*dt, gameMap);
+    if (input.isDown("KeyS")) player.moveForward(-movespeed*dt, gameMap);
+    if (input.isDown("KeyD")) player.strafe(movespeed * dt, gameMap);
+    if (input.isDown("KeyA")) player.strafe(-movespeed * dt, gameMap);
     if (input.isDown("ArrowLeft"))  player.rotate(-rotSpeed * dt)
     if (input.isDown("ArrowRight")) player.rotate(rotSpeed * dt);
 

@@ -13,6 +13,8 @@ export class GameMap{
     }
 
     isWall(x, y){
+        x = Math.floor(x);
+        y = Math.floor(y);
         if(x < 0 || y < 0) return true;
         if(x >= this.mapWidth || y >= this.mapHeight) return true;
         return this.grid[y][x] !== 0;
