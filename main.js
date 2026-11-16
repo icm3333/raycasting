@@ -50,6 +50,79 @@ function drawMinimap(renderer, map, player, tile){
     drawLine(renderer, px, py, ex, ey, 0, 255, 0);
 }
 
+function castWalls(renderer, map, player){
+    const W = renderer.width;
+    const H = renderer.height;
+
+    for(let x = 0; x<W; x++){
+        const cameraX = 2 * x / W - 1;
+        const rayDirX = player.dir.x + player.plane.x * cameraX;
+        const rayDirY = player.dir.y + player.plane.y * cameraX;
+
+        let mapX = Math.floor(player.pos.x);
+        let mapY = Math.floor(player.pos.y);
+
+        const deltaDistX = (rayDirX === 0) ? Infinity : Math.abs(1/rayDirX);
+        const deltaDistY = (rayDirY === 0) ? Infinity : Math.abs(1/rayDirY);
+
+        let stepX, stepY, sideDistX, sideDistY;
+
+        if(rayDirX < 0){
+            stepX = -1;
+            sideDistX = (player.pos.x - mapX) * deltaDistX;
+        }else{
+            stepX = 1;
+            sideDistX = (mapX + 1 - player.pos.x) * deltaDistX;
+        }
+
+        if(rayDirY < 0){
+            stepY = -1;
+            sideDistY = (player.pos.y - mapY) * deltaDistY;
+        }else{
+            stepY = 1;
+            sideDistY = (mapY + 1 - player.pos.y) * deltaDistY;
+        }
+
+        let hit = 0;
+        let side;
+        while(hit === 0){
+            if(sideDistX < sideDistY){
+                sideDistX += deltaDistX;
+                mapX += stepX;
+                side = 0;
+            }else{
+                sideDistY += deltaDistY;
+                mapY += stepY;
+                side = 1;
+            }
+            if(map.isWall(mapX, mapY)) hit = 1;
+        }
+
+        let perpDist;
+        if(side === 0){
+            perpDist = (sideDistX - deltaDistX);
+        }else{
+            perpDist = (sideDistY - deltaDistY);
+        }
+
+        let lineHeight = Math.floor(H / perpDist);
+        let drawStart = Math.floor(-lineHeight / 2 + H / 2);
+        let drawEnd = Math.floor(lineHeight / 2 + H / 2);
+        if(drawStart < 0) drawStart = 0;
+        if(drawEnd >= H) drawEnd = H - 1;
+
+        let r = 200, g = 60, b = 60;
+        if(side === 1){
+            r = Math.floor(r*0.7);
+            g = Math.floor(g*0.7);
+            b = Math.floor(b*0.7);
+        }
+        for(let y = drawStart; y <= drawEnd; y++){
+            renderer.setPixel(x, y, r, g, b);
+        }
+    }
+}
+
 function frame(now){
     if(previousNow === null){
         previousNow = now;
@@ -69,7 +142,9 @@ function frame(now){
     if (input.isDown("ArrowRight")) player.rotate(rotSpeed * dt);
 
     renderer.clear(120, 0, 240);
-    drawMinimap(renderer, gameMap, player, TILE);
+    renderer.fillRect(0, 0, WIDTH, HEIGHT/2, 50, 50, 70);
+    renderer.fillRect(0, HEIGHT/2, WIDTH, HEIGHT/2, 80, 80, 80);
+    castWalls(renderer, gameMap, player);
     renderer.present();
 
     requestAnimationFrame(frame);
