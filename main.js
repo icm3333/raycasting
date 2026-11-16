@@ -13,6 +13,7 @@ const input = new Input();
 const player = new Player(4, 4, 0, -1, 0.66, 0);
 const gameMap = new GameMap();
 const TILE = 8;
+const rotSpeed = 2;
 
 let movespeed = 1;
 
@@ -64,6 +65,8 @@ function frame(now){
     if (input.isDown("KeyS")) player.moveForward(-movespeed*dt);
     if (input.isDown("KeyD")) player.strafe(movespeed * dt);
     if (input.isDown("KeyA")) player.strafe(-movespeed * dt);
+    if (input.isDown("ArrowLeft"))  player.rotate(-rotSpeed * dt)
+    if (input.isDown("ArrowRight")) player.rotate(rotSpeed * dt);
 
     renderer.clear(120, 0, 240);
     drawMinimap(renderer, gameMap, player, TILE);
